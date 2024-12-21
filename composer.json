@@ -1,0 +1,32 @@
+{
+    "name": "broman_pl/extra-simple-analytics",
+    "description": "Web page analytics for self-hosting, offering a private alternative to solutions like Google Analytics",
+
+    "require": {
+        "hexydec/agentzero": "^1.1",
+        "maxmind-db/reader": "~1.0",
+        "smarty/smarty": "^5.1"
+    },
+    "scripts": {
+        "get-bulma": [
+            "curl -L -o ./tmp/bulma.zip https://github.com/jgthms/bulma/releases/download/1.0.2/bulma-1.0.2.zip",
+            "unzip ./tmp/bulma.zip -d ./tmp",
+            "mkdir -p ./vendor/bulma/",
+            "cp ./tmp/bulma/css/bulma.min.css ./vendor/bulma/",
+            "rm -rf ./tmp/bulma",
+            "rm -rf ./tmp/bulma.zip"
+        ],
+        "get-chartjs": [
+            "mkdir -p ./vendor/chartjs/",
+            "curl -L -o ./vendor/chartjs/chart.js https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"
+        ],        
+        "get-geoip-data": [
+            "curl -L -o ./tmp/bulma.zip https://github.com/jgthms/bulma/releases/download/1.0.2/bulma-1.0.2.zip",
+            "unzip ./tmp/bulma.zip -d ./tmp",
+            "mkdir -p ./vendor/bulma/",
+            "cp ./tmp/bulma/css/bulma.min.css ./vendor/bulma/",
+            "rm -rf ./tmp/bulma",
+            "rm -rf ./tmp/bulma.zip"
+        ]
+    }    
+}

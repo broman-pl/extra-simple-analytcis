@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>Extra Simple Analytcis</title>
+        <link rel="stylesheet" href="{$basePath}/vendor/bulma/bulma.min.css"/>
+        <link rel="stylesheet" href="{$basePath}/css/extra.css"/>
+        <link rel="icon" href="{$basePath}/esa-icon.svg" type="image/svg"/>
+      </head>
+      <body>        
+        <nav class="navbar">
+          <div class="navbar-brand mr-3"><h1 class="title"><a class="navbar-item" href="#">Extra Simple Analytcis!</a></h1></div>
+          <div class="navbar-menu">
+            <div class="navbar-start">
+              {foreach from=$maniMenu item=menuItem}
+              <a class="navbar-item {$menuItem.active}" href="{$menuItem.url}">{$menuItem.name}</a>
+              {/foreach}
+            </div>
+            <div class="navbar-end">
+              <div class="navbar-item">
+                <button class="button" id="theme-toggle"><i class="fa-icon fa-theme" title="theme toggle"></i></button>
+              </div>
+              <div class="navbar-item">
+                <button class="button is-link">Login</button>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <main>
+          <section class="section">
+            <div class="container">
+              {if isset($mainBody)}{include file="$mainBody"}{/if}
+            </div>
+          </section>
+        </main>
+        <footer class="footer"><div class="content has-text-right">
+          <a href="https://github.com/broman-pl/extra-simple-analytcis" target="_blank">extra-simple-analytcis@github</a>
+        </div></footer>
+
+        <script src="{$basePath}/vendor/chartjs/chart.js"></script>    
+        <script src="{$basePath}/js/report.js"></script>        
+      </body>
+</html>

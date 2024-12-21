@@ -1,0 +1,107 @@
+<div class="container">
+    <div class="">
+        <section class="section block has-background">
+            <h1 class="title">Visits</h1>
+            <div style="height: 15rem;"><canvas id="pages-status-chart"></canvas></div>
+            <div class="summary-numbers columns is-centered pt-6">
+                <div class="column">
+                    <div class="card is-shadowless">
+                        <div class="card-content has-background-link">
+                            <h3 class="title is-3 has-text-centered">{$analyticsData.visits}</h3>
+                        </div>
+                        <footer class="card-footer">
+                            <p class="card-footer-item">Visits</p>
+                        </footer>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card is-shadowless">
+                        <div class="card-content has-background-link">
+                            <h3 class="title is-3 has-text-centered">{$analyticsData.unique}</h3>
+                        </div>
+                        <footer class="card-footer">
+                            <p class="card-footer-item">Unique Visits</p>
+                        </footer>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card is-shadowless">
+                        <div class="card-content has-background-link">
+                            <h3 class="title is-3 has-text-centered">{$analyticsData.pages}</h3>
+                        </div>
+                        <footer class="card-footer">
+                            <p class="card-footer-item">Page views</p>
+                        </footer>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card is-shadowless">
+                        <div class="card-content has-background-link">
+                            <h3 class="title is-3 has-text-centered">{$analyticsData.bounce}</h3>
+                        </div>
+                        <footer class="card-footer">
+                            <p class="card-footer-item">Bounce rate</p>
+                        </footer>
+                    </div>
+                </div>
+            </div> 
+            <div>
+                <table class="table is-striped full-width">
+                {foreach from=$analyticsData.latestVisits item=visit}
+                <tr>
+                    <td>
+                        <div class="fixed-grid has-4-cols">
+                            <div class="grid">
+                                <div class="cell is-col-span-3">
+                                    {$visit.time} (<a href="{$basePath}/visitor/{$visit.sessionId}">{$visit.visitorId}</a>, {$visit.visitorHost}, {$visit.visitorCountry}) 
+                                </div>
+                                <div class="cell is-row-span-2 is-size-2 has-text-centered">
+                                    {$visit.viewCount} <span class="is-size-6"><a href="{$basePath}/session/{$visit.sessionId}">pages viewed</a></span> 
+                                </div>
+                                <div class="cell is-col-span-2 is-size-4">
+                                    <div>
+                                        {$visit.siteDomain}
+                                        <a href="https://{$visit.siteDomain}{$visit.sitePath}" target="_blank">{$visit.sitePath}</a>
+                                    </div>
+                                    <div class="is-size-6">
+                                        {$visit.reffererUrl} 
+                                        {$visit.reffererSite} 
+                                        {$visit.reffererType}
+                                    </div>
+                                </div>
+                                <div class="cell has-text-centered">
+                                    <i class="fa-icon fa-{$visit.osNameCss}" title="{$visit.osName}"></i>
+                                    <i class="fa-icon fa-{$visit.browserNameCss}" title="{$visit.browserName}"></i>
+                                    <i class="fa-icon fa-{$visit.browserTypeCss}" title="{$visit.browserType}"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {/foreach}
+                </table> 
+            </div>
+        </section>
+
+        <section class="section block has-background">
+            <h1 class="title">Locations</h1>
+            {assign var="table" value="locations"}
+            {include file="table.html"}
+        </section>
+
+        <section class="section block has-background">
+            <h1 class="title">Browsers</h1>
+            {assign var="table" value="browsers"}
+            {include file="table.html"}
+        </section>
+
+        <section class="section block has-background">
+            <h1 class="title">Pages</h1>
+            {assign var="table" value="pages"}
+            {include file="table.html"}
+        </section>
+
+
+    </div>
+</div>
+

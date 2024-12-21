@@ -1,0 +1,89 @@
+
+.icon {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-repeat: no-repeat;
+    background-position: center;
+} 
+
+.fa-icon {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.fa-chrome {
+    background-image: url( ../images/chrome.svg );
+}
+
+.fa-firefox {
+    background-image: url( ../images/firefox-browser.svg );
+}
+
+.fa-edge {
+    background-image: url( ../images/edge.svg );
+}
+
+.fa-safari {
+    background-image: url( ../images/safari.svg );
+}
+
+.fa-browser {
+    background-image: url( ../images/window-maximize-solid.svg );
+}
+
+.fa-windows {
+    background-image: url( ../images/windows.svg );
+}
+
+.fa-macosx {
+    background-image: url( ../images/apple.svg );
+}
+
+.fa-linux {
+    background-image: url( ../images/linux.svg );
+}
+
+.fa-android {
+    background-image: url( ../images/android.svg );
+}
+
+.fa-robot {
+    background-image: url( ../images/robot-solid.svg );
+}
+
+.fa-human {
+    background-image: url( ../images/user-solid.svg );
+}
+
+@media (prefers-color-scheme: dark) {
+    .fa-icon {
+        filter: invert();
+    }
+    .fa-theme {
+        background-image: url( ../images/moon-solid.svg );
+    }
+}
+
+[data-theme=dark] .fa-icon {
+    filter: invert(0.70);
+}
+
+[data-theme=light] .fa-icon {
+    filter: invert(0.30);
+}
+
+[data-theme=light] .fa-theme {
+    background-image: url( ../images/sun-solid.svg );
+}
+
+[data-theme=dark] .fa-theme {
+    background-image: url( ../images/moon-solid.svg );
+}
+
+.full-width {
+    width: 100%;
+}

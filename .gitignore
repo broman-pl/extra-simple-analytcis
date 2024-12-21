@@ -1,0 +1,9 @@
+.DS_Store
+.vscode 
+conf/esa-config.php
+data/*
+vendor/*
+cache/cache/*
+cache/templates_c/*
+tmp/*
+logs/*
