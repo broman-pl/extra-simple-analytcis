@@ -12,6 +12,30 @@ error_reporting(E_ALL);
 ini_set ('display_errors', 0);
 ini_set ('log_errors', 1);
 
+function fatal_handler() {
+    $error = error_get_last();
+
+	if ($error != NULL && array_key_exists('type', $error) && $error['type'] == 1) {
+		$error['kind'] = 'Fatal';
+		$error['url'] = $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
+		$error['description'] = $error['message'];
+		$error['stacktrace'] = debug_backtrace();
+		$error['date'] = date("Y-m-d H:i:s");
+		$Conf['page']['title'] = "77design";
+		$handle = fopen(__DIR__.'/cache/logs/errors-'.date("Y-m-d").'.log', 'a');
+		fwrite($handle, json_encode($error)."\n");
+		fclose($handle);	
+		if (array_key_exists('CONTENT_TYPE', $_SERVER) && $_SERVER['CONTENT_TYPE'] == 'application/json') {
+			http_response_code(500);
+			header('Content-Type: application/json');
+			echo "{\"status\": \"FATAL\", \"kind\": \"{$error['kind']}\", \"description\": \"".$error['description']."\"}";
+		}
+		exit();
+	}
+}
+
+register_shutdown_function( "fatal_handler");
+
 include ("conf/esa-config.php");
 include ("modules/esa-db.php");
 require __DIR__ . '/vendor/autoload.php';
@@ -122,8 +146,13 @@ function getForeginId($type, $parameters, $db) {
 		}
 		$i++;
 	}
-	$query = "INSERT INTO ".ESA_DB_PREFIX."_".$type." (id, $columns) VALUES ($id, $values)";
-	//echo $query;
+	if($type == 'events' || $type == 'errors' ) {
+		$siteKey = $parameters['siteId'];
+		$query = "INSERT INTO ".ESA_DB_PREFIX."_".$type." (id, $columns) SELECT $id, $values WHERE EXISTS ( SELECT 1 FROM ".ESA_DB_PREFIX."_sites WHERE ".ESA_DB_PREFIX."_sites.key = '$siteKey')";
+	} else {
+		$query = "INSERT INTO ".ESA_DB_PREFIX."_".$type." (id, $columns) VALUES ($id, $values)";
+	}
+	
 	$save = $db->query($query);
 	return $id;
 

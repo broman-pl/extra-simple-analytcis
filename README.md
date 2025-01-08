@@ -42,11 +42,11 @@ composer run-script get-chartjs
 - Show pages summary 
     - add gathering page title insted of just url/path
 
-- Support multiple sites
-- Icons 
+- Support multiple sites on deasboard
 - Code snippet generator (site id)
-- Validation of site if on beacon call
+[x] Validation of site if on beacon call
 
-- improve update process for geo ip data
+- Improve update process for geo ip data
+- Keep user selected theme dark/light
 
 

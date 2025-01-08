@@ -62,6 +62,7 @@ $db->query("CREATE TABLE IF NOT EXISTS ".ESA_DB_PREFIX."_events (
     `id` bigint NOT NULL,
     `visitor_id` bigint NOT NULL,
     `session_id` bigint NOT NULL,
+    `site_id` varchar(32) NOT NULL,
     `location_id` bigint NOT NULL,
     `refferer_id` bigint NOT NULL DEFAULT 0,
     `os_id` bigint NOT NULL,
@@ -80,6 +81,7 @@ $db->query("CREATE TABLE IF NOT EXISTS ".ESA_DB_PREFIX."_events (
 
 $db->query("CREATE TABLE IF NOT EXISTS ".ESA_DB_PREFIX."_errors ( 
     `id` bigint NOT NULL,
+    `site_id` varchar(32) NOT NULL,
     `location_id` bigint NOT NULL,
     `os_id` bigint NOT NULL,
     `browser_id` bigint NOT NULL,
@@ -101,7 +103,14 @@ $db->query("CREATE TABLE IF NOT EXISTS ".ESA_DB_PREFIX."_users (
     `lastlogin_date` timestamp NOT NULL,
     `sites` varchar(250) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`)
-    )");    
+    )");   
+    
+$db->query("CREATE TABLE IF NOT EXISTS ".ESA_DB_PREFIX."_sites ( 
+    `id` bigint NOT NULL,
+    `name` varchar(50) NOT NULL DEFAULT '',
+    `key` varchar(32) NOT NULL DEFAULT '', 
+    PRIMARY KEY (`id`)
+    )");
 
 $db->close();
 
