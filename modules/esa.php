@@ -16,6 +16,8 @@ class esa {
     private $knownOs = ['windows', 'macosx', 'linux', 'android'];
     private $knownTypes = ['human', 'robot'];
     private $baseUrl = "/esa";
+    private $currentSiteId = '';
+    private $currentSiteName = '';
 
     public static function getInstance() {
         if (self::$instance == NULL) {
@@ -80,8 +82,31 @@ class esa {
         $this->smarty->assign('maniMenu', $mainMenuItems);
     }
 
+    function setSites() {
+        $sites = array();
+        $result = $this->db->execute("select * from ".ESA_DB_PREFIX."_sites ORDER BY name", []);
+        $l = $this->db->count($result);
+        for ($i=0;$i<$l;$i++) {
+            $row = $this->db->rowByNames($result);
+            if ($this->currentSiteId == '') {
+                $this->currentSiteId = $row['key'];
+                $this->currentSiteName = $row['name'];
+            }
+
+            $site = array(
+                "key" => $row['key'],
+                "name" => $row['name'],
+                "active" => ($row['key'] == $this->currentSiteId? 1 : 0) 
+            );
+            $sites[] = $site;
+        }
+        $this->smarty->assign('sites', $sites);
+        $this->smarty->assign('siteName', $this->currentSiteName);
+    }
+
     public function proccessRequest() {
         $this->setMainMenu();
+        $this->setSites();
 
         if(isset($_COOKIE[ESA_COOKIENAME]) && $this->isValidSession($_COOKIE[ESA_COOKIENAME])) {
             $url = $this->proccessUrl($_SERVER["REQUEST_URI"]);
@@ -147,8 +172,9 @@ class esa {
         $result = $this->db->execute("SELECT date_format(timestamp, '%Y-%m-%d') as date, count(DISTINCT session_id) as counter 
         FROM ".ESA_DB_PREFIX."_events 
         WHERE timestamp > NOW() + INTERVAL -14 DAY 
+        AND site_id = ?
         GROUP BY date 
-        ORDER BY date", []);
+        ORDER BY date", [$this->currentSiteId]);
 
         $l = $this->db->count($result);
         $out['data'] = [];
@@ -180,22 +206,22 @@ class esa {
     function getAnalytcisData() {
         $out = [];
         // sessions 
-        $result = $this->db->execute("SELECT count(DISTINCT session_id) as counter FROM ".ESA_DB_PREFIX."_events WHERE timestamp > NOW() + INTERVAL -14 DAY", []);
+        $result = $this->db->execute("SELECT count(DISTINCT session_id) as counter FROM ".ESA_DB_PREFIX."_events WHERE timestamp > NOW() + INTERVAL -14 DAY AND site_id = ?", [$this->currentSiteId]);
         $row = $this->db->rowByNames($result);
         $out['visits'] = $row['counter'];
 
         // visitors
-        $result = $this->db->execute("SELECT count(DISTINCT visitor_id) as counter FROM ".ESA_DB_PREFIX."_events WHERE timestamp > NOW() + INTERVAL -14 DAY", []);
+        $result = $this->db->execute("SELECT count(DISTINCT visitor_id) as counter FROM ".ESA_DB_PREFIX."_events WHERE timestamp > NOW() + INTERVAL -14 DAY AND site_id = ?", [$this->currentSiteId]);
         $row = $this->db->rowByNames($result);
         $out['unique'] = $row['counter'];
 
         // views
-        $result = $this->db->execute("SELECT count(*) as counter FROM ".ESA_DB_PREFIX."_events WHERE timestamp > NOW() + INTERVAL -14 DAY", []);
+        $result = $this->db->execute("SELECT count(*) as counter FROM ".ESA_DB_PREFIX."_events WHERE timestamp > NOW() + INTERVAL -14 DAY AND site_id = ?", [$this->currentSiteId]);
         $row = $this->db->rowByNames($result);
         $out['pages'] = $row['counter'];
 
         // bounce rate 
-        $result = $this->db->execute("SELECT count(*) as c2 FROM (SELECT count(*) as c1 FROM ".ESA_DB_PREFIX."_events WHERE timestamp > NOW() + INTERVAL -14 DAY GROUP BY session_id HAVING c1 = 1) as t2", []);
+        $result = $this->db->execute("SELECT count(*) as c2 FROM (SELECT count(*) as c1 FROM ".ESA_DB_PREFIX."_events WHERE timestamp > NOW() + INTERVAL -14 DAY AND site_id = ? GROUP BY session_id HAVING c1 = 1) as t2", [$this->currentSiteId]);
         $row = $this->db->rowByNames($result);
         if ($out['visits'] > 0) {
             $out['bounce'] = round(($row['c2']/$out['visits'])*100,2).'%';
@@ -206,13 +232,13 @@ class esa {
         // last 20 visits 
 
         $result = $this->db->execute("SELECT g.views_count, g.session_id, e.visitor_id, g.m_ts as timestamp, l.ip, l.host, l.countryCode, r.url, r.site, r.type as rtype, o.name as oname, b.name as bname, b.type as btype, b.category, u.domain, u.path FROM (
-            SELECT session_id, COUNT(*) as views_count, min(id) as s_id, MAX(timestamp) as m_ts FROM ".ESA_DB_PREFIX."_events GROUP BY session_id ORDER by m_ts DESC LIMIT 0,20) as g
+            SELECT session_id, COUNT(*) as views_count, min(id) as s_id, MAX(timestamp) as m_ts FROM ".ESA_DB_PREFIX."_events WHERE site_id = ? GROUP BY session_id ORDER by m_ts DESC LIMIT 0,20) as g
         LEFT JOIN ".ESA_DB_PREFIX."_events as e ON e.id = g.s_id
         LEFT JOIN ".ESA_DB_PREFIX."_location as l ON l.id = e.location_id 
         LEFT JOIN ".ESA_DB_PREFIX."_refferer as r ON r.id = e.refferer_id 
         LEFT JOIN ".ESA_DB_PREFIX."_os as o ON o.id = e.os_id 
         LEFT JOIN ".ESA_DB_PREFIX."_browser as b ON b.id = e.browser_id 
-        LEFT JOIN ".ESA_DB_PREFIX."_url as u ON u.id = e.url_id", []);
+        LEFT JOIN ".ESA_DB_PREFIX."_url as u ON u.id = e.url_id", [$this->currentSiteId]);
         $l = $this->db->count($result);
         $out['latestVisits'] = [];
         for ($i=0;$i<$l;$i++) {
