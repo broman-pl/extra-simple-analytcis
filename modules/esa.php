@@ -18,6 +18,9 @@ class esa {
     private $baseUrl = "/esa";
     private $currentSiteId = '';
     private $currentSiteName = '';
+    private $url = [];
+    private $urlCount = 0;
+    private $sessionData = array();
 
     public static function getInstance() {
         if (self::$instance == NULL) {
@@ -91,12 +94,18 @@ class esa {
             if ($this->currentSiteId == '') {
                 $this->currentSiteId = $row['key'];
                 $this->currentSiteName = $row['name'];
+                
             }
-
+            if ($row['key'] == $this->currentSiteId) {
+                $active = 1;
+                $this->currentSiteName = $row['name'];
+            } else {
+                $active = 0;
+            }
             $site = array(
                 "key" => $row['key'],
                 "name" => $row['name'],
-                "active" => ($row['key'] == $this->currentSiteId? 1 : 0) 
+                "active" => $active
             );
             $sites[] = $site;
         }
@@ -104,7 +113,56 @@ class esa {
         $this->smarty->assign('siteName', $this->currentSiteName);
     }
 
+    function routeParse() {
+        $request_url = $_SERVER["REQUEST_URI"];
+        if (strpos($request_url,'?')>0) {
+            $request_url = substr($request_url,0,strpos($request_url,'?'));
+        }
+        $request_url = str_replace($this->baseUrl, '', $request_url);
+        $param = explode('/',strtolower($request_url));
+        $url = array();
+        $url = array_values(array_filter($param, fn($value) => !is_null($value) && $value !== ''));
+        $urlCount = count($url);
+        if ($urlCount > 0) {
+            switch ($url[0]) {
+                case 'site': // change selected site
+                    if($urlCount > 1 && $url[1] != '') {
+                        $this->currentSiteId = $url[1];
+                        $this->sessionData['siteKey'] = $url[1];
+                    }
+                    break;
+                case 'visitor': // change selected site
+                    break;
+                case 'browser': // change selected site
+                    break;
+                case 'location': // change selected site
+                    break;
+                case 'session': // change selected site
+                    break;
+                default:
+                    break;
+            }        
+        }
+
+        $this->url = $url;
+        $this->urlCount = count($url);
+    }
+
+    function sessionParse() {
+        if (isset($_SESSION) && array_key_exists("esa", $_SESSION) && is_array($_SESSION['esa'])) {
+            $this->sessionData = $_SESSION['esa'];
+            foreach($_SESSION['esa'] as $key => $value) {
+                if($key == 'siteKey') {                    
+                    $this->currentSiteId = $_SESSION['esa']['siteKey'];
+                }
+            }
+
+        }
+    }
+
     public function proccessRequest() {
+        $this->sessionParse();
+        $this->routeParse();
         $this->setMainMenu();
         $this->setSites();
 
@@ -149,6 +207,8 @@ class esa {
             $this->smarty->assign('mainBody', "login.html");
             $this->mainTemplate = "main.html";
         }
+
+        $_SESSION['esa'] = $this->sessionData;
 
         if ($this->mainTemplate != '') {
             $this->smarty->display($this->mainTemplate);

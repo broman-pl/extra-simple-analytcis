@@ -8,6 +8,8 @@ require_once(ESA_DIR."/modules/esa-db.php");
 require_once(ESA_DIR.'/vendor/autoload.php');
 require_once(ESA_DIR.'/modules/esa.php');
 
+session_start();
+
 $esa = new esa;
 $esa->proccessRequest();
 
