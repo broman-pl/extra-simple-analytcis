@@ -303,7 +303,7 @@ class esa {
         $out['latestVisits'] = [];
         for ($i=0;$i<$l;$i++) {
             $row = $this->db->rowByNames($result);
-            $out['latestVisits'][$row['visitor_id']] = array(
+            $out['latestVisits'][$row['session_id']] = array(
                 'viewCount' => $row['views_count'],
                 'sessionId' => $row['session_id'],
                 'visitorId' => $row['visitor_id'],
