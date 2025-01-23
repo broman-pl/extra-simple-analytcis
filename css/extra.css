@@ -59,6 +59,10 @@
     background-image: url( ../images/user-solid.svg );
 }
 
+.fa-angle-down {
+    background-image: url( ../images/chevron_down_icon.svg );
+}
+
 @media (prefers-color-scheme: dark) {
     .fa-icon {
         filter: invert();
