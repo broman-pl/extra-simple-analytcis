@@ -42,8 +42,8 @@ composer run-script get-chartjs
 - Show pages summary 
     - add gathering page title insted of just url/path
 
-- Support multiple sites on deasboard
-- Code snippet generator (site id)
+[x] Support multiple sites on deasboard
+[x] Code snippet generator (site id)
 [x] Validation of site if on beacon call
 
 - Improve update process for geo ip data
