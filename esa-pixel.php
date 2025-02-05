@@ -15,7 +15,7 @@ ini_set ('log_errors', 1);
 function fatal_handler() {
     $error = error_get_last();
 
-	if ($error != NULL && array_key_exists('type', $error) && $error['type'] == 1) {
+	if ($error != NULL && array_key_exists('type', $error)) {
 		$error['kind'] = 'Fatal';
 		$error['url'] = $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 		$error['description'] = $error['message'];
@@ -30,7 +30,9 @@ function fatal_handler() {
 			header('Content-Type: application/json');
 			echo "{\"status\": \"FATAL\", \"kind\": \"{$error['kind']}\", \"description\": \"".$error['description']."\"}";
 		}
-		exit();
+		if ($error['type'] == 1) {
+			exit();
+		}
 	}
 }
 
@@ -173,6 +175,11 @@ if (in_array($params['ip'], ESA_IP_EXCLUSIONS)) {
 
 // Basic analytcis params
 $params = addParam('si', $_GET, $params, 'siteId', 1);
+if(!array_key_exists('siteId', $params)) {
+	trigger_error("error missing siteId: ", E_USER_WARNING);
+	exit();
+}
+
 $params = addParam('iv', $_GET, $params, 'visitorId', 2);
 $params = addParam('is', $_GET, $params, 'sessionId', 2);
 $params = addParam('w', $_GET, $params, 'browserWidth', 2);
