@@ -103,6 +103,39 @@ function toggleTheme() {
     element.setAttribute('data-theme', newTheme)    
 }
 
+function showSessionDetails(data, element) {
+    console.log(data)
+}
+
+function getSessionDetails(event) {
+    const sessionDiv = event.currentTarget
+    const sessionId = sessionDiv.getAttribute('data-session-id');
+    if(sessionId == null) {
+        console.log("[ERROR] no session id")
+        return
+    }
+
+    fetch('/esa/api/session/' + sessionId, {
+    headers: {
+        "Accept": "application/json",
+      }
+    })
+    .then((response) => response.json())
+    .then((json) => showSessionDetails(json, sessionDiv))
+    .catch((error) => {
+        console.error('Error fetching data:', error);
+    });    
+}
+
+function initLinks() {
+    document.querySelectorAll('.session-details').forEach(element => { 
+        const counter = element.getAttribute('data-session-counter')
+        if(counter > 1) {
+            element.addEventListener('click', getSessionDetails)
+        }
+    })
+}
+
 let element = document.querySelector('#theme-toggle');
 element.addEventListener("click", toggleTheme, false);
 
@@ -110,4 +143,5 @@ document.addEventListener("DOMContentLoaded", () => {
     // init our app
     getColors()
     visitsChartInit()
+    initLinks()
 })

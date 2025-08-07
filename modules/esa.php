@@ -171,8 +171,25 @@ class esa {
             //TODO: routing for drill down
             if (count($url) > 0 && $url[0] == 'api' && $_SERVER['HTTP_ACCEPT'] == 'application/json') {
                 header('Content-Type: application/json');
-                if(count($url) > 1 && $url[1] == 'visits') {
-                    echo json_encode($this->getChartData());
+                $urlCount = count($url);
+                if ($urlCount > 1) {
+                    switch ($url[1]) {
+                        case 'visits': // change selected site
+                            echo json_encode($this->getChartData());
+                            break;
+                        case 'session': // change selected site
+                            if ($urlCount > 2) {
+                                echo json_encode($this->getSessionData(intval($url[2])));
+                            } else {
+                                echo '{"state": "error", "descritption": "no session id"}';
+                            }
+                            break;
+                        default:
+                            echo '{"state": "error", "descritption": "unknown api"}';
+                            break;                        
+                    }
+                } else {
+                    echo '{"state": "error", "descritption": "missing api"}';
                 }
                 exit();
             } else {
@@ -246,6 +263,37 @@ class esa {
 
         return $out;
         # SELECT date_format(timestamp, '%Y-%m-%d') as date, count(DISTINCT session_id) FROM `esa_events` group by date; 
+
+    }
+
+    function getSessionData($sessionId) {
+        $out = [];
+        $out['status'] = 'ok';
+        $result = $this->db->execute("SELECT * FROM `esa_events` 
+            left join esa_url ON esa_events.url_id = esa_url.id 
+            left join esa_os ON esa_events.os_id = esa_os.id 
+            left join esa_browser ON esa_events.browser_id = esa_browser.id 
+            left join esa_location ON esa_events.location_id = esa_location.id 
+            left join esa_refferer ON esa_events.refferer_id = esa_refferer.id 
+            where session_id = ?", [$sessionId]);
+
+        $l = $this->db->count($result);
+        $out['data'] = [];
+        for ($i=0;$i<$l;$i++) {
+            $row = $this->db->rowByNames($result);
+            $out['data'][$row['timestamp']] = array(
+                'path' => $row['path'],
+                'browser_name' => $row['name'],
+                'browser_type' => $row['type'],
+                'browser_category' => $row['category'],
+                'country' => $row['country'],
+                'city' => $row['city'],
+            );
+            
+        }
+
+
+        return $out;
 
     }
 

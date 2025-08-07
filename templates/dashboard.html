@@ -55,8 +55,8 @@
                                 <div class="cell is-col-span-3">
                                     {$visit.time} (<a href="{$basePath}/visitor/{$visit.sessionId}">{$visit.visitorId}</a>, {$visit.visitorHost}, {$visit.visitorCountry}) 
                                 </div>
-                                <div class="cell is-row-span-2 is-size-2 has-text-centered">
-                                    {$visit.viewCount} <span class="is-size-6"><a href="{$basePath}/session/{$visit.sessionId}">pages viewed</a></span> 
+                                <div class="cell is-row-span-2 is-size-2 has-text-centered is-hoverable {if $visit.viewCount>1}is-clickable{/if} session-details" data-session-id="{$visit.sessionId}" data-session-counter="{$visit.viewCount}">
+                                    {$visit.viewCount} <span class="is-size-6">pages viewed</span> 
                                 </div>
                                 <div class="cell is-col-span-2 is-size-4">
                                     <div>
