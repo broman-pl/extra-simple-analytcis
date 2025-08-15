@@ -278,10 +278,12 @@ class esa {
             where session_id = ?", [$sessionId]);
 
         $l = $this->db->count($result);
+        $out['sessionId'] = $sessionId;
         $out['data'] = [];
         for ($i=0;$i<$l;$i++) {
             $row = $this->db->rowByNames($result);
-            $out['data'][$row['timestamp']] = array(
+            $out['data'][] = array(
+                'date' => $row['timestamp'],
                 'path' => $row['path'],
                 'browser_name' => $row['name'],
                 'browser_type' => $row['type'],

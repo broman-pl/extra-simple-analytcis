@@ -55,7 +55,7 @@
                                 <div class="cell is-col-span-3">
                                     {$visit.time} (<a href="{$basePath}/visitor/{$visit.sessionId}">{$visit.visitorId}</a>, {$visit.visitorHost}, {$visit.visitorCountry}) 
                                 </div>
-                                <div class="cell is-row-span-2 is-size-2 has-text-centered is-hoverable {if $visit.viewCount>1}is-clickable{/if} session-details" data-session-id="{$visit.sessionId}" data-session-counter="{$visit.viewCount}">
+                                <div class="cell is-row-span-2 is-size-2 has-text-centered is-hoverable {if $visit.viewCount>1}is-clickable has-text-link{/if} session-details" data-session-id="{$visit.sessionId}" data-session-counter="{$visit.viewCount}">
                                     {$visit.viewCount} <span class="is-size-6">pages viewed</span> 
                                 </div>
                                 <div class="cell is-col-span-2 is-size-4">
@@ -105,3 +105,15 @@
     </div>
 </div>
 
+<template id="pages-list-row">
+    <div class="cell is-col-span-4">
+        <div class="fixed-grid has-4-cols">
+            <div class="grid">
+                <div class="coll page-date"></div>
+                <div class="coll page-url"></div>
+                <div class="coll page-browser"></div>
+                <div class="coll page-geo"></div>
+            </div>
+        </div>
+    </div>
+</template>

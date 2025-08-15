@@ -102,9 +102,35 @@ function toggleTheme() {
     }
     element.setAttribute('data-theme', newTheme)    
 }
+function addSessionRow(data, session) {
+    const template = document.getElementById('pages-list-row');
+    const clone = document.importNode(template.content, true);
+    clone.id = "page-session-" + session;
+
+    clone.querySelector('.page-url').textContent = data['path'];
+    clone.querySelector('.page-date').textContent = data['date'];
+    clone.querySelector('.page-browser').textContent = data['browser_name'];
+    clone.querySelector('.page-geo').textContent = data['country'] + ' ' + data['city'];
+
+    return clone;
+}
 
 function showSessionDetails(data, element) {
-    console.log(data)
+    const parent = element.parentElement
+    if("data" in data && data['data'].length > 0) {
+        data['data'].forEach(entry => {
+            parent.appendChild(addSessionRow(entry, data['sessionId']))
+            console.log(entry)
+        })        
+    }
+
+//    const infoDiv = document.createElement("div");
+//    infoDiv.id = data['sessionId'];
+//    infoDiv.classList.add('cell');
+//    infoDiv.classList.add('is-col-span-4');
+//    infoDiv.innerText = JSON.stringify(data)
+//    parent.appendChild(infoDiv)
+//    console.log(data)
 }
 
 function getSessionDetails(event) {
