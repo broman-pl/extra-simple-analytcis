@@ -106,7 +106,9 @@ function addSessionRow(data, session) {
     const template = document.getElementById('pages-list-row');
     const clone = document.importNode(template.content, true);
     clone.id = "page-session-" + session;
-
+    clone
+      .querySelector('.session-row')
+      .setAttribute('id', "page-session-" + session);
     clone.querySelector('.page-url').textContent = data['path'];
     clone.querySelector('.page-date').textContent = data['date'];
     clone.querySelector('.page-browser').textContent = data['browser_name'];
@@ -138,6 +140,12 @@ function getSessionDetails(event) {
     const sessionId = sessionDiv.getAttribute('data-session-id');
     if(sessionId == null) {
         console.log("[ERROR] no session id")
+        return
+    }
+
+    const existingDetails = document.querySelectorAll("#page-session-" + sessionId)
+    if(existingDetails.length > 0) {
+        existingDetails.forEach(element => {element.remove()})
         return
     }
 
