@@ -2,7 +2,7 @@
 RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^becon.gif(.*)$ esa-pixel.php?q=$1 [L,QSA]
+RewriteRule ^page-(t|e)\.gif$ esa-pixel.php [L,QSA]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

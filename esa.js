@@ -7,7 +7,7 @@ var sendErrorLog = function(error) {
 	query = query + "u=" + encodeURIComponent(location.href) + "&";
 
 	var a = document.createElement("img");
-	a.src = esa_baseUrl + 'becon.gif?' + query;
+	a.src = esa_baseUrl + 'page-e.gif?' + query;
 	a.width= '1';
 	a.height= '1';
 	document.body.appendChild(a);
@@ -77,7 +77,7 @@ var createId = function(type) {
 		}		
 	}
 	var a = document.createElement("img");
-	a.src = esa_baseUrl + 'becon.gif?' + query;
+	a.src = esa_baseUrl + 'page-t.gif?' + query;
 	a.width= '1';
 	a.height= '1';
 	document.body.appendChild(a);
