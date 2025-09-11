@@ -278,7 +278,7 @@ class esa {
             where session_id = ?", [$sessionId]);
 
         $l = $this->db->count($result);
-        $out['sessionId'] = $sessionId;
+        $out['sessionId'] = (string)$sessionId; // JS is not able to handle so big values of intigers
         $out['data'] = [];
         for ($i=0;$i<$l;$i++) {
             $row = $this->db->rowByNames($result);
