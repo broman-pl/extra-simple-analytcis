@@ -1,6 +1,27 @@
 <div class="container">
     <div class="">
         <section class="section block has-background">
+                <div class="dropdown is-hoverable is-right extra-menu">
+                  <div class="dropdown-trigger">
+                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                      <span class="icon is-small">
+                        <i class="fa-icon fa-more" aria-hidden="true"></i>
+                      </span>
+                    </button>
+                  </div>
+                  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div class="dropdown-content">
+                      <div class="dropdown-item"><p>Select time frame</p></div>
+                      <hr class="dropdown-divider" />                      
+                      <a class="dropdown-item is-active" href="#">last 2 weeks</a>
+                      <div class="dropdown-item">last 1 month</div>
+                      <div class="dropdown-item">last 3 months</div>
+                      <div class="dropdown-item">last 6 months</div>
+                      <div class="dropdown-item">last 1 year</div>
+                    </div>
+                  </div>
+                </div>
+
             <h1 class="title">Visits</h1>
             <div style="height: 15rem;"><canvas id="pages-status-chart"></canvas></div>
             <div class="summary-numbers columns is-centered pt-6">

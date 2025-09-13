@@ -63,6 +63,10 @@
     background-image: url( ../images/chevron_down_icon.svg );
 }
 
+.fa-more {
+    background-image: url( ../images/more_vertical.svg );
+}
+
 @media (prefers-color-scheme: dark) {
     .fa-icon {
         filter: invert();
@@ -90,4 +94,8 @@
 
 .full-width {
     width: 100%;
+}
+
+.extra-menu {
+    float: right;
 }
