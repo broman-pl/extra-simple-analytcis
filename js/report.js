@@ -1,12 +1,13 @@
 
-function visitsChartInit() {
-    fetch('/esa/api/visits', {
+function chartInit(chartType) {
+
+    fetch('/esa/api/' + chartType, {
     headers: {
         "Accept": "application/json",
       }
     })
         .then((response) => response.json())
-        .then((json) => setVisitsChart(json));
+        .then((json) => window['set' + chartType.charAt(0).toUpperCase() + chartType.slice(1) + 'Chart'](json));
 }
 
 function addDays(date, days) {
@@ -87,6 +88,46 @@ function setVisitsChart(jsonData) {
     new Chart(ctx, config)
 
 }
+
+
+function setLocationsChart(jsonData) {
+    const ctx = document.getElementById('locations-chart');
+    labels = ['Poland', 'USA', 'Germany']
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Locations',
+            data: [12,15,18],
+            fill: false,
+            borderColor: baseColor,
+            tension: 0.1
+        }]
+    };    
+    const config = {
+        type: 'doughnut',
+        data: data,
+        options: {
+            plugins: {
+                legend: {
+                    display: false,
+                },
+            },
+            responsive: true,
+            maintainAspectRatio: false         
+        }
+      };
+
+    new Chart(ctx, config)    
+}
+
+function setBrowsersChart(jsonData) {
+
+}
+
+function setPagesChart(jsonData) {
+
+}
+
 
 function getColors() {
     const style = getComputedStyle(document.body)
@@ -176,6 +217,9 @@ element.addEventListener("click", toggleTheme, false);
 document.addEventListener("DOMContentLoaded", () => {
     // init our app
     getColors()
-    visitsChartInit()
+    chartInit('visits')
+    chartInit('locations')
+    chartInit('browsers')
+    chartInit('pages')
     initLinks()
 })

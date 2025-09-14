@@ -106,8 +106,29 @@
 
         <section class="section block has-background">
             <h1 class="title">Locations</h1>
-            {assign var="table" value="locations"}
-            {include file="table.html"}
+            <div class="columns">
+                <div class="column"style="height: 25rem;"><canvas id="locations-chart"></canvas></div>
+                <div class="column">
+                    <table class="table is-striped full-width" id="locations-table">
+                        <tr>
+                            <th>Location</th>
+                            <th>Count</th>
+                        </tr>
+                        <tr>
+                            <td>Poland</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td>USA</td>
+                            <td>15</td>
+                        </tr>
+                        <tr>
+                            <td>Germany</td>
+                            <td>17</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </section>
 
         <section class="section block has-background">
