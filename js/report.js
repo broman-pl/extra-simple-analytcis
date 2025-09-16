@@ -111,7 +111,7 @@ function setLocationsChart(jsonData) {
             data: [10, 15, 8, 12, 5, 20, 10, 7, 6, 7],
             fill: false,
             backgroundColor: colorsAraay,
-            borderColor: textColor,
+            borderColor: backgroundColor,
             tension: 0.1
         }]
     };    
@@ -129,7 +129,8 @@ function setLocationsChart(jsonData) {
         }
       };
 
-    new Chart(ctx, config)    
+    const chart = new Chart(ctx, config)    
+    charts['location'] = chart
 }
 
 function setBrowsersChart(jsonData) {
@@ -141,13 +142,10 @@ function setPagesChart(jsonData) {
 }
 
 function getColors() {
-    // TODO: change color definitions to bulma vars to support dark/ligh switch 
-
     const style = getComputedStyle(document.body)
     window.baseColor = style.getPropertyValue('--bulma-link')
     window.secondColor = style.getPropertyValue('--bulma-primary')
-    window.textColor = style.getPropertyValue('--bulma-background')
-    
+    window.backgroundColor = style.getPropertyValue('--bulma-background')
 }
 
 const toHSLArray = hslStr => hslStr.match(/\d+/g).map(Number);
@@ -187,7 +185,13 @@ function toggleTheme() {
     if (currentTheme == 'light') {
         newTheme = 'dark'
     }
-    element.setAttribute('data-theme', newTheme)    
+    element.setAttribute('data-theme', newTheme)
+
+    // get new color values from css and applay to charts configs
+    getColors()
+    charts['location'].data.datasets[0].borderColor = backgroundColor
+    charts['location'].update()
+
 }
 function addSessionRow(data, session) {
     const template = document.getElementById('pages-list-row');
@@ -251,6 +255,8 @@ function initLinks() {
 
 let element = document.querySelector('#theme-toggle');
 element.addEventListener("click", toggleTheme, false);
+
+let charts = {}
 
 document.addEventListener("DOMContentLoaded", () => {
     // init our app
