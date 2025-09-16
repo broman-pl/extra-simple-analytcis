@@ -89,17 +89,29 @@ function setVisitsChart(jsonData) {
 
 }
 
-
 function setLocationsChart(jsonData) {
     const ctx = document.getElementById('locations-chart');
-    labels = ['Poland', 'USA', 'Germany']
+    labels = [
+        "Brazil",
+        "Japan",
+        "Canada",
+        "Nigeria",
+        "Australia",
+        "Germany",
+        "India",
+        "Argentina",
+        "South Africa",
+        "France"
+    ]
+    const colorsAraay = getColorsArray(labels.length)
     const data = {
         labels: labels,
         datasets: [{
             label: 'Locations',
-            data: [12,15,18],
+            data: [10, 15, 8, 12, 5, 20, 10, 7, 6, 7],
             fill: false,
-            borderColor: baseColor,
+            backgroundColor: colorsAraay,
+            borderColor: textColor,
             tension: 0.1
         }]
     };    
@@ -128,10 +140,44 @@ function setPagesChart(jsonData) {
 
 }
 
-
 function getColors() {
+    // TODO: change color definitions to bulma vars to support dark/ligh switch 
+
     const style = getComputedStyle(document.body)
     window.baseColor = style.getPropertyValue('--bulma-link')
+    window.secondColor = style.getPropertyValue('--bulma-primary')
+    window.textColor = style.getPropertyValue('--bulma-background')
+    
+}
+
+const toHSLArray = hslStr => hslStr.match(/\d+/g).map(Number);
+
+function getColorsArray(size) {
+    gradientValuesStart = toHSLArray(secondColor)
+    gradientValuesEnd = toHSLArray(baseColor)
+    outArray = []
+    for(let i = 0; i < size; i++){
+        if(i == 0) {
+            outArray[0] = 'hsl(' + gradientValuesStart[0] + 'deg,' + gradientValuesStart[1] + '%,' + gradientValuesStart[2] + '%)'
+            continue
+        }
+        if(i == size-1 ) {
+            outArray[i] = 'hsl(' + gradientValuesEnd[0] + 'deg,' + gradientValuesEnd[1] + '%,' + gradientValuesEnd[2] + '%)'
+            continue
+        }
+
+        let dH = gradientValuesEnd[0]-gradientValuesStart[0]
+        let dS = gradientValuesEnd[1]-gradientValuesStart[1]
+        let dL = gradientValuesEnd[2]-gradientValuesStart[2]
+        let valH = Math.round(gradientValuesStart[0] + i*(dH/(size-1)))
+        let valS = Math.round(gradientValuesStart[1] + i*(dS/(size-1)))
+        let valL = Math.round(gradientValuesStart[2] + i*(dL/(size-1)))
+
+        outArray[i] = 'hsl(' + valH + 'deg,' + valS + '%,' + valL + '%)'
+
+    }
+
+    return outArray
 }
 
 function toggleTheme() {
@@ -166,14 +212,6 @@ function showSessionDetails(data, element) {
             console.log(entry)
         })        
     }
-
-//    const infoDiv = document.createElement("div");
-//    infoDiv.id = data['sessionId'];
-//    infoDiv.classList.add('cell');
-//    infoDiv.classList.add('is-col-span-4');
-//    infoDiv.innerText = JSON.stringify(data)
-//    parent.appendChild(infoDiv)
-//    console.log(data)
 }
 
 function getSessionDetails(event) {
