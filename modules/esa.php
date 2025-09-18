@@ -174,16 +174,26 @@ class esa {
                 $urlCount = count($url);
                 if ($urlCount > 1) {
                     switch ($url[1]) {
-                        case 'visits': // change selected site
+                        case 'visits':
                             echo json_encode($this->getChartData());
                             break;
-                        case 'session': // change selected site
+                        case 'session':
                             if ($urlCount > 2) {
                                 echo json_encode($this->getSessionData(intval($url[2])));
                             } else {
                                 echo '{"state": "error", "descritption": "no session id"}';
                             }
                             break;
+                        case 'locations':
+                            echo json_encode($this->getChartLocationsData());
+                            break;
+                        case 'browsers':
+                            echo json_encode($this->getChartBrowsersData());
+                            break;
+                        case 'pages':
+                            echo json_encode($this->getChartPagesData());
+                            break;                            
+
                         default:
                             echo '{"state": "error", "descritption": "unknown api"}';
                             break;                        
@@ -263,6 +273,73 @@ class esa {
 
         return $out;
         # SELECT date_format(timestamp, '%Y-%m-%d') as date, count(DISTINCT session_id) FROM `esa_events` group by date; 
+
+    }
+
+    function getChartLocationsData() {
+        $out = [];
+        $out['status'] = 'ok';
+        $result = $this->db->execute("SELECT country, count(*) as counter FROM ".ESA_DB_PREFIX."_events
+            LEFT JOIN ".ESA_DB_PREFIX."_location ON ".ESA_DB_PREFIX."_location.id = ".ESA_DB_PREFIX."_events.location_id
+            WHERE timestamp > NOW() + INTERVAL -14 DAY
+            AND site_id = ?
+            GROUP BY COUNTRY
+            ORDER BY counter DESC", [$this->currentSiteId]);
+        
+        $l = $this->db->count($result);
+        $out['data'] = [];
+        for ($i=0;$i<$l;$i++) {
+            $row = $this->db->rowByNames($result);
+            $out['data'][$row['country']] = $row['counter'];
+        }
+
+        return $out;
+
+    }
+
+    function getChartBrowsersData() {
+        $out = [];
+        $out['status'] = 'error';
+/*        
+        $result = $this->db->execute("SELECT date_format(timestamp, '%Y-%m-%d') as date, count(DISTINCT session_id) as counter 
+        FROM ".ESA_DB_PREFIX."_events 
+        WHERE timestamp > NOW() + INTERVAL -14 DAY 
+        AND site_id = ?
+        GROUP BY date 
+        ORDER BY date", [$this->currentSiteId]);
+
+        $l = $this->db->count($result);
+        $out['data'] = [];
+        for ($i=0;$i<$l;$i++) {
+            $row = $this->db->rowByNames($result);
+            $out['data'][$row['date']] = $row['counter'];
+            
+        }
+*/
+        return $out;
+
+    }
+
+    function getChartPagesData() {
+        $out = [];
+        $out['status'] = 'error';
+        /*
+        $result = $this->db->execute("SELECT date_format(timestamp, '%Y-%m-%d') as date, count(DISTINCT session_id) as counter 
+        FROM ".ESA_DB_PREFIX."_events 
+        WHERE timestamp > NOW() + INTERVAL -14 DAY 
+        AND site_id = ?
+        GROUP BY date 
+        ORDER BY date", [$this->currentSiteId]);
+
+        $l = $this->db->count($result);
+        $out['data'] = [];
+        for ($i=0;$i<$l;$i++) {
+            $row = $this->db->rowByNames($result);
+            $out['data'][$row['date']] = $row['counter'];
+            
+        }
+*/
+        return $out;
 
     }
 

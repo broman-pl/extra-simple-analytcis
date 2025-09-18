@@ -109,23 +109,13 @@
             <div class="columns">
                 <div class="column"style="height: 25rem;"><canvas id="locations-chart"></canvas></div>
                 <div class="column">
-                    <table class="table is-striped full-width" id="locations-table">
-                        <tr>
-                            <th>Location</th>
-                            <th>Count</th>
-                        </tr>
-                        <tr>
-                            <td>Poland</td>
-                            <td>12</td>
-                        </tr>
-                        <tr>
-                            <td>USA</td>
-                            <td>15</td>
-                        </tr>
-                        <tr>
-                            <td>Germany</td>
-                            <td>17</td>
-                        </tr>
+                    <table class="table is-striped full-width">
+                        <tbody id="locations-table">
+                            <tr class="summaries-header">
+                                <th>Location</th>
+                                <th>Count</th>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -158,4 +148,11 @@
             </div>
         </div>
     </div>
+</template>
+
+<template id="summaries-row">
+    <tr class="summaries-row">
+        <td class="summaries-name">USA</td>
+        <td class="summaries-count">15</td>
+    </tr>
 </template>

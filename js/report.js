@@ -89,26 +89,35 @@ function setVisitsChart(jsonData) {
 
 }
 
+function fillTable(data,name) {
+
+    const template = document.getElementById('summaries-row');
+    const table = document.getElementById(name + '-table');
+
+    for (let key in data) {
+        const clone = document.importNode(template.content, true);
+
+        clone.querySelector('.summaries-name').textContent = key;
+        clone.querySelector('.summaries-count').textContent = data[key];
+        
+        table.appendChild(clone)
+    }
+    
+}
+
 function setLocationsChart(jsonData) {
     const ctx = document.getElementById('locations-chart');
-    labels = [
-        "Brazil",
-        "Japan",
-        "Canada",
-        "Nigeria",
-        "Australia",
-        "Germany",
-        "India",
-        "Argentina",
-        "South Africa",
-        "France"
-    ]
+
+    fillTable(jsonData.data,'locations')
+    const labels = Object.keys(jsonData.data)  
+    const values = Object.values(jsonData.data)
+
     const colorsAraay = getColorsArray(labels.length)
     const data = {
         labels: labels,
         datasets: [{
             label: 'Locations',
-            data: [10, 15, 8, 12, 5, 20, 10, 7, 6, 7],
+            data: values,
             fill: false,
             backgroundColor: colorsAraay,
             borderColor: backgroundColor,
@@ -151,8 +160,8 @@ function getColors() {
 const toHSLArray = hslStr => hslStr.match(/\d+/g).map(Number);
 
 function getColorsArray(size) {
-    gradientValuesStart = toHSLArray(secondColor)
-    gradientValuesEnd = toHSLArray(baseColor)
+    gradientValuesStart = toHSLArray(baseColor)
+    gradientValuesEnd = toHSLArray(secondColor)
     outArray = []
     for(let i = 0; i < size; i++){
         if(i == 0) {
