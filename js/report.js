@@ -143,11 +143,79 @@ function setLocationsChart(jsonData) {
 }
 
 function setBrowsersChart(jsonData) {
+    const ctx = document.getElementById('browsers-chart');
+
+    fillTable(jsonData.data,'browsers')
+
+    const labels = Object.keys(jsonData.data)  
+    const values = Object.values(jsonData.data)
+    const colorsAraay = getColorsArray(labels.length)
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Browsers',
+            data: values,
+            fill: false,
+            backgroundColor: colorsAraay,
+            borderColor: backgroundColor,
+            tension: 0.1
+        }]
+    };    
+    const config = {
+        type: 'doughnut',
+        data: data,
+        options: {
+            plugins: {
+                legend: {
+                    display: false,
+                },
+            },
+            responsive: true,
+            maintainAspectRatio: false         
+        }
+      };
+
+    const chart = new Chart(ctx, config)    
+    charts['location'] = chart
 
 }
 
 function setPagesChart(jsonData) {
+    const ctx = document.getElementById('pages-chart');
 
+    fillTable(jsonData.data,'pages')
+
+    const labels = Object.keys(jsonData.data)  
+    const values = Object.values(jsonData.data)
+    const colorsAraay = getColorsArray(labels.length)
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Pages',
+            data: values,
+            fill: false,
+            backgroundColor: colorsAraay,
+            borderColor: backgroundColor,
+            tension: 0.1
+        }]
+    };    
+    const config = {
+        type: 'doughnut',
+        data: data,
+        options: {
+            plugins: {
+                legend: {
+                    display: false,
+                },
+            },
+            responsive: true,
+            maintainAspectRatio: false         
+        }
+      };
+
+    const chart = new Chart(ctx, config)    
+    charts['location'] = chart    
+    
 }
 
 function getColors() {

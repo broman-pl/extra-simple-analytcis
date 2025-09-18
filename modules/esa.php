@@ -284,7 +284,8 @@ class esa {
             WHERE timestamp > NOW() + INTERVAL -14 DAY
             AND site_id = ?
             GROUP BY COUNTRY
-            ORDER BY counter DESC", [$this->currentSiteId]);
+            ORDER BY counter DESC
+            LIMIT 10", [$this->currentSiteId]);
         
         $l = $this->db->count($result);
         $out['data'] = [];
@@ -300,22 +301,26 @@ class esa {
     function getChartBrowsersData() {
         $out = [];
         $out['status'] = 'error';
-/*        
-        $result = $this->db->execute("SELECT date_format(timestamp, '%Y-%m-%d') as date, count(DISTINCT session_id) as counter 
-        FROM ".ESA_DB_PREFIX."_events 
-        WHERE timestamp > NOW() + INTERVAL -14 DAY 
-        AND site_id = ?
-        GROUP BY date 
-        ORDER BY date", [$this->currentSiteId]);
+      
+        $result = $this->db->execute("SELECT name, count(*) as counter FROM ".ESA_DB_PREFIX."_events
+            LEFT JOIN ".ESA_DB_PREFIX."_browser ON ".ESA_DB_PREFIX."_browser.id = ".ESA_DB_PREFIX."_events.browser_id
+            WHERE timestamp > NOW() + INTERVAL -14 DAY
+            AND site_id = ?
+            GROUP BY name
+            ORDER BY counter DESC
+            LIMIT 10", [$this->currentSiteId]);
 
         $l = $this->db->count($result);
         $out['data'] = [];
         for ($i=0;$i<$l;$i++) {
             $row = $this->db->rowByNames($result);
-            $out['data'][$row['date']] = $row['counter'];
+            if ($row['name'] == '') {
+                $row['name'] = 'Unknow';
+            }
+            $out['data'][$row['name']] = $row['counter'];
             
         }
-*/
+
         return $out;
 
     }
@@ -323,22 +328,23 @@ class esa {
     function getChartPagesData() {
         $out = [];
         $out['status'] = 'error';
-        /*
-        $result = $this->db->execute("SELECT date_format(timestamp, '%Y-%m-%d') as date, count(DISTINCT session_id) as counter 
-        FROM ".ESA_DB_PREFIX."_events 
-        WHERE timestamp > NOW() + INTERVAL -14 DAY 
-        AND site_id = ?
-        GROUP BY date 
-        ORDER BY date", [$this->currentSiteId]);
+
+        $result = $this->db->execute("SELECT path, count(*) as counter FROM ".ESA_DB_PREFIX."_events
+            LEFT JOIN ".ESA_DB_PREFIX."_url ON ".ESA_DB_PREFIX."_url.id = ".ESA_DB_PREFIX."_events.url_id
+            WHERE timestamp > NOW() + INTERVAL -14 DAY
+            AND site_id = ?
+            GROUP BY path
+            ORDER BY counter DESC
+            LIMIT 10", [$this->currentSiteId]);
 
         $l = $this->db->count($result);
         $out['data'] = [];
         for ($i=0;$i<$l;$i++) {
             $row = $this->db->rowByNames($result);
-            $out['data'][$row['date']] = $row['counter'];
+            $out['data'][$row['path']] = $row['counter'];
             
         }
-*/
+        
         return $out;
 
     }

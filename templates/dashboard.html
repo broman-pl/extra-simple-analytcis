@@ -107,7 +107,7 @@
         <section class="section block has-background">
             <h1 class="title">Locations</h1>
             <div class="columns">
-                <div class="column"style="height: 25rem;"><canvas id="locations-chart"></canvas></div>
+                <div class="column"style="height: 30rem;"><canvas id="locations-chart"></canvas></div>
                 <div class="column">
                     <table class="table is-striped full-width">
                         <tbody id="locations-table">
@@ -123,14 +123,36 @@
 
         <section class="section block has-background">
             <h1 class="title">Browsers</h1>
-            {assign var="table" value="browsers"}
-            {include file="table.html"}
+            <div class="columns">
+                <div class="column"style="height: 30rem;"><canvas id="browsers-chart"></canvas></div>
+                <div class="column">
+                    <table class="table is-striped full-width">
+                        <tbody id="browsers-table">
+                            <tr class="summaries-header">
+                                <th>Browser</th>
+                                <th>Count</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </section>
 
         <section class="section block has-background">
             <h1 class="title">Pages</h1>
-            {assign var="table" value="pages"}
-            {include file="table.html"}
+            <div class="columns">
+                <div class="column"style="height: 30rem;"><canvas id="pages-chart"></canvas></div>
+                <div class="column">
+                    <table class="table is-striped full-width">
+                        <tbody id="pages-table">
+                            <tr class="summaries-header">
+                                <th>Pasge</th>
+                                <th>Count</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </section>
 
 
