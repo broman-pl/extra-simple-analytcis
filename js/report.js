@@ -43,7 +43,6 @@ function setVisitsChart(jsonData) {
     for (let step = 0; step < days; step++) {
         labels.push((stepDate.getMonth()+1) + '/' + (stepDate.getDate()))
         isoDate = stepDate.toISOString().substring(0, 10)
-        console.log(isoDate)
 
         if (isoDate in jsonData['data']) {
             values.push(jsonData['data'][isoDate])
@@ -290,7 +289,6 @@ function showSessionDetails(data, element) {
     if("data" in data && data['data'].length > 0) {
         data['data'].forEach(entry => {
             parent.appendChild(addSessionRow(entry, data['sessionId']))
-            console.log(entry)
         })        
     }
 }
